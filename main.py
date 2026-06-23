@@ -4,6 +4,12 @@ from src.data_cleaner import (
     calculate_returns
 )
 
+from src.portfolio import (
+    equal_weights,
+    portfolio_returns,
+    portfolio_value
+)
+
 tickers = [
     "AAPL",
     "MSFT",
@@ -11,7 +17,7 @@ tickers = [
 ]
 
 prices = fetch_prices(
-    tickers=tickers,
+    tickers,
     start_date="2020-01-01",
     end_date="2025-01-01"
 )
@@ -20,10 +26,19 @@ prices = clean_prices(prices)
 
 returns = calculate_returns(prices)
 
-print(prices.head())
-print()
+weights = equal_weights(
+    len(tickers)
+)
 
-print(returns.head())
+port_ret = portfolio_returns(
+    returns,
+    weights
+)
 
-prices.to_csv("data/prices.csv")
-returns.to_csv("data/returns.csv")
+equity_curve = portfolio_value(
+    port_ret,
+    initial_investment=10000
+)
+
+print(equity_curve.head())
+print(equity_curve.tail())
